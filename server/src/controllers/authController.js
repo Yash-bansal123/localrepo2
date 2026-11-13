@@ -55,7 +55,9 @@ const login = async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+    const user = await User.findOne({
+      $or: [{ email: email.toLowerCase() }, { aliasEmail: email.toLowerCase() }]
+    }).select('+password');
 
     if (!user) {
       return res.status(401).json({

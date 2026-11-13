@@ -7,6 +7,9 @@ const BookSchema = new mongoose.Schema({
     required: [true, 'Author is required'],
     index: true
   },
+  bookId: {
+    type: String
+  },
   title: {
     type: String,
     required: [true, 'Title is required']
@@ -25,23 +28,15 @@ const BookSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: [
-      'Manuscript Received',
-      'Editing',
-      'Cover Design',
-      'Typesetting',
-      'Proofreading',
-      'ISBN Assignment',
-      'Printing',
-      'Distribution Setup',
-      'Published & Live',
-      'In Production'
-    ],
-    default: 'In Production'
+    default: 'Published & Live'
   },
   mrp: {
     type: Number,
-    required: [true, 'MRP is required']
+    default: 0
+  },
+  authorRoyaltyPerCopy: {
+    type: Number,
+    default: 0
   },
   copiesSold: {
     type: Number,
@@ -59,6 +54,17 @@ const BookSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  lastRoyaltyPayoutDate: {
+    type: Date
+  },
+  printPartner: {
+    type: String
+  },
+  availableOn: [
+    {
+      type: String
+    }
+  ],
   platformSales: {
     amazonIn: { type: Number, default: 0 },
     flipkart: { type: Number, default: 0 },

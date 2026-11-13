@@ -12,6 +12,8 @@ const STATUS_STYLES = {
   'Distribution Setup': 'bg-cyan-100 text-cyan-700',
   'Manuscript Received':'bg-gray-100 text-gray-600',
   'In Production':      'bg-gray-100 text-gray-600',
+  'In Production - Cover Design': 'bg-purple-100 text-purple-700',
+  'In Production - Typesetting':  'bg-yellow-100 text-yellow-700',
 };
 
 const fmtDate = (d) => {
