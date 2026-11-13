@@ -7,10 +7,20 @@ This portal delivers a production-grade, full-stack author communication and sup
 
 ---
 
+## 🌐 Live Deployment Links
+- **Live Frontend Portal**: [https://localrepo2.vercel.app](https://localrepo2.vercel.app)
+- **Live Backend REST API**: [https://bookleaf-api-v9nn.onrender.com](https://bookleaf-api-v9nn.onrender.com)
+- **Source Code Repository**: [https://github.com/Yash-bansal123/localrepo2](https://github.com/Yash-bansal123/localrepo2)
+- **Test Credentials**:
+  - **Admin**: `admin@bookleaf.com` / `Admin@123`
+  - **Author**: `priya.sharma@email.com` (or `author1@test.com`) / `Author@123`
+
+---
+
 ## Architecture & Technology Stack
 - **Frontend**: React 18, Vite, React Router DOM v7, Tailwind CSS v4, Axios (JWT interceptors), Socket.io-client.
 - **Backend**: Node.js & Express.js v5, Socket.io (WebSocket engine), Helmet, Express-Rate-Limit, Morgan.
-- **Database**: MongoDB with Mongoose ODM (strict indexing and pre-save bcrypt password hashing).
+- **Database**: MongoDB Atlas with Mongoose ODM (strict indexing and pre-save bcrypt password hashing).
 - **AI Intelligence**: OpenAI `gpt-4o-mini` with JSON Mode response formatting and short in-memory Knowledge Base (<110 words) for maximum cost efficiency.
 - **Quality Assurance**: Automated testing via Vitest, Supertest, and isolated database fixtures.
 
@@ -41,6 +51,5 @@ This portal delivers a production-grade, full-stack author communication and sup
 ## Verification & Production Readiness
 - **Automated Tests**: 8/8 comprehensive test cases passing (`vitest run`).
 - **Production Build**: 0 errors, 0 warnings (`vite build`).
-- **Data Integrity**: Verified database seeding with 11 users, 18 books, and validated math (`royaltyPending = royaltyEarned - royaltyPaid`).
+- **Data Integrity**: Verified database seeding with 1 Admin, 10 Authors, 18 Books directly matching the official `bookleaf_sample_data.json` dataset.
 - **Security**: Zero hardcoded secrets, complete `.env` git exclusion, rate-limited auth routes, and Helmet HTTP protection.
-
