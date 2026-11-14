@@ -10,7 +10,6 @@
 | Component | Platform | URL |
 |---|---|---|
 | **Frontend Application** | **Vercel** | [https://localrepo2.vercel.app](https://localrepo2.vercel.app) |
-| **Backend REST API** | **Render** | [https://bookleaf-api-v9nn.onrender.com](https://bookleaf-api-v9nn.onrender.com) |
 | **Source Code Repository** | **GitHub** | [https://github.com/Yash-bansal123/localrepo2](https://github.com/Yash-bansal123/localrepo2) |
 | **Cloud Database** | **MongoDB Atlas** | Seeded with official `bookleaf_sample_data.json` (10 authors, 18 books) |
 
