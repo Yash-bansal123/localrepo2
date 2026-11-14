@@ -117,6 +117,12 @@ export default function TicketDetail() {
         <div className="bg-teal-50 border border-teal-100 rounded-lg p-4">
           <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{ticket.description}</p>
         </div>
+        {ticket.attachmentName && (
+          <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700">
+            <span>📎 Attached File:</span>
+            <span className="font-semibold text-teal-800">{ticket.attachmentName}</span>
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-5">

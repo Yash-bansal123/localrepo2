@@ -22,6 +22,10 @@ const TicketSchema = new mongoose.Schema(
       required: [true, 'Description is required'],
       minlength: [20, 'Description must be at least 20 characters']
     },
+    attachmentName: {
+      type: String,
+      default: null
+    },
     category: {
       type: String,
       enum: [

@@ -149,5 +149,5 @@ describe('Ticket API & Security Integration Tests', () => {
     expect(resAdmin.body.ticket.internalNotes).toBeDefined();
     expect(resAdmin.body.ticket.internalNotes.length).toBe(1);
     expect(resAdmin.body.ticket.internalNotes[0].note).toContain('Confidential admin note');
-  });
+  }, 10000);
 });

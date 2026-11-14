@@ -284,6 +284,12 @@ export default function AdminTicketDetail() {
                 {ticket.description}
               </p>
             </div>
+            {ticket.attachmentName && (
+              <div className="mt-2 p-2.5 bg-teal-50 border border-teal-200 rounded-lg flex items-center gap-2 text-xs text-teal-900 font-medium">
+                <span>📎 Attached:</span>
+                <span className="font-bold">{ticket.attachmentName}</span>
+              </div>
+            )}
           </Section>
 
           <Section title="Assignment" icon="👷">

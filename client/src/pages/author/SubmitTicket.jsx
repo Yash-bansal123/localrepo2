@@ -40,6 +40,8 @@ export default function SubmitTicket() {
     category: 'General Inquiry',
     priority: 'Medium',
   });
+  const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [toast, setToast] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -63,6 +65,31 @@ export default function SubmitTicket() {
     if (fieldErrors[field]) setFieldErrors(e => ({ ...e, [field]: '' }));
   };
 
+  const handleFileChange = (e) => {
+    const selected = e.target.files?.[0];
+    if (!selected) return;
+
+    if (selected.size > 5 * 1024 * 1024) {
+      setToast({ message: 'File size must be under 5MB', type: 'error' });
+      return;
+    }
+
+    setFile(selected);
+    if (selected.type.startsWith('image/')) {
+      setFilePreview(URL.createObjectURL(selected));
+    } else {
+      setFilePreview(null);
+    }
+  };
+
+  const removeFile = () => {
+    setFile(null);
+    if (filePreview) {
+      URL.revokeObjectURL(filePreview);
+      setFilePreview(null);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
@@ -76,6 +103,7 @@ export default function SubmitTicket() {
         description: form.description.trim(),
         category: form.category,
         priority: form.priority,
+        attachmentName: file ? file.name : null,
       });
       setToast({ message: 'Ticket submitted successfully!', type: 'success' });
       setTimeout(() => navigate('/dashboard/tickets'), 1500);
@@ -99,17 +127,18 @@ export default function SubmitTicket() {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
-
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Select Book</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">Regarding Book</label>
           <select
             value={form.bookId}
             onChange={e => handleChange('bookId', e.target.value)}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none bg-white"
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none bg-white transition"
           >
-            <option value="general">🏢 General / Account Level</option>
+            <option value="general">General / Account Level Query</option>
             {books.map(b => (
-              <option key={b._id} value={b._id}>📗 {b.title} ({b.isbn})</option>
+              <option key={b._id} value={b._id}>
+                {b.title} ({b.isbn})
+              </option>
             ))}
           </select>
         </div>
@@ -120,9 +149,11 @@ export default function SubmitTicket() {
             <select
               value={form.category}
               onChange={e => handleChange('category', e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none bg-white"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none bg-white transition"
             >
-              {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+              {CATEGORIES.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
             </select>
           </div>
           <div>
@@ -130,23 +161,28 @@ export default function SubmitTicket() {
             <select
               value={form.priority}
               onChange={e => handleChange('priority', e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none bg-white"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none bg-white transition"
             >
-              {PRIORITIES.map(p => <option key={p}>{p}</option>)}
+              {PRIORITIES.map(p => (
+                <option key={p} value={p}>{p}</option>
+              ))}
             </select>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="text-sm font-medium text-gray-700">Subject <span className="text-red-500">*</span></label>
-            <span className={`text-xs ${subjectLen > 140 ? 'text-orange-500' : 'text-gray-400'}`}>{subjectLen}/150</span>
+          <div className="flex justify-between items-center mb-1.5">
+            <label className="block text-sm font-medium text-gray-700">
+              Subject <span className="text-red-500">*</span>
+            </label>
+            <span className={`text-xs ${subjectLen > 150 ? 'text-red-500 font-semibold' : 'text-gray-400'}`}>
+              {subjectLen}/150
+            </span>
           </div>
           <input
             type="text"
             value={form.subject}
             onChange={e => handleChange('subject', e.target.value)}
-            maxLength={150}
             placeholder="e.g. Royalty payment not received for Q2 2025"
             className={`w-full px-4 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition ${
               fieldErrors.subject ? 'border-red-400 bg-red-50' : 'border-gray-300'
@@ -173,14 +209,50 @@ export default function SubmitTicket() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Attach File <span className="text-gray-400 font-normal">(optional)</span></label>
-          <div className="border border-dashed border-gray-300 rounded-lg px-4 py-4 text-center hover:border-teal-400 transition cursor-pointer">
-            <input type="file" id="file-upload" className="sr-only" />
-            <label htmlFor="file-upload" className="cursor-pointer">
-              <p className="text-sm text-gray-500">📎 Click to attach a file</p>
-              <p className="text-xs text-gray-400 mt-1">PDF, PNG, JPG up to 5MB</p>
-            </label>
-          </div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            Attach File <span className="text-gray-400 font-normal">(optional — image or document)</span>
+          </label>
+          
+          {!file ? (
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-teal-500 hover:bg-teal-50/20 transition cursor-pointer relative">
+              <input
+                type="file"
+                id="file-upload"
+                accept="image/*,.pdf"
+                onChange={handleFileChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div className="flex flex-col items-center pointer-events-none">
+                <span className="text-3xl mb-1">📎</span>
+                <p className="text-sm font-medium text-gray-700">Click to browse or drop an image/file here</p>
+                <p className="text-xs text-gray-400 mt-1">PNG, JPG, JPEG, PDF up to 5MB</p>
+              </div>
+            </div>
+          ) : (
+            <div className="border border-teal-200 bg-teal-50/70 rounded-xl p-3.5 flex items-center justify-between transition">
+              <div className="flex items-center gap-3 overflow-hidden">
+                {filePreview ? (
+                  <img src={filePreview} alt="Preview" className="w-12 h-12 object-cover rounded-lg border border-teal-200 flex-shrink-0" />
+                ) : (
+                  <div className="w-12 h-12 rounded-lg bg-teal-100 flex items-center justify-center text-teal-700 text-xl font-bold flex-shrink-0">
+                    📄
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-gray-800 truncate">{file.name}</p>
+                  <p className="text-xs text-teal-700">{(file.size / 1024).toFixed(1)} KB • Attached & ready</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={removeFile}
+                className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-white rounded-lg transition text-xs font-semibold flex items-center gap-1 border border-transparent hover:border-gray-200"
+                title="Remove attachment"
+              >
+                ✕ Remove
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end pt-2">

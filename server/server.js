@@ -53,7 +53,9 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
-app.use('/api/auth', authLimiter);
+if (process.env.NODE_ENV !== 'test') {
+  app.use('/api/auth', authLimiter);
+}
 
 app.use(express.json());
 

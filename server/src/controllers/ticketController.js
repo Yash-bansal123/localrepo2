@@ -18,7 +18,7 @@ const createTicket = async (req, res, next) => {
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
-    const { subject, description, bookId, category, priority } = req.body;
+    const { subject, description, bookId, category, priority, attachmentName } = req.body;
 
     let bookRef = null;
 
@@ -38,6 +38,7 @@ const createTicket = async (req, res, next) => {
       book: bookRef,
       subject,
       description,
+      attachmentName: attachmentName || null,
       category: category || 'General Inquiry',
       priority: priority || 'Medium',
       status: 'Open'
